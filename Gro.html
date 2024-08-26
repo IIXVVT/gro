@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gro Rui og Leanders Eventyrbryllup</title>
+    <style>
+        @keyframes rgbEffect {
+            0% { background-color: red; }
+            33% { background-color: green; }
+            66% { background-color: blue; }
+            100% { background-color: red; }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            text-align: center;
+            display: none;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .gro-rui-img {
+            width: 200px; /* حجم ثابت لصورة Gro Rui */
+        }
+
+        .leander-img {
+            width: 150px; /* حجم أصغر لصورة Leander */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        #showArticleButton {
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #333;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            animation: rgbEffect 3s infinite;
+            margin: 10px;
+        }
+
+        #showArticleButton:hover {
+            background-color: #555;
+        }
+
+        #readTextButton, #stopTextButton {
+            padding: 10px 20px; /* حجم أصغر للزر */
+            font-size: 14px;
+            color: #fff;
+            background-color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        #readTextButton:hover, #stopTextButton:hover {
+            background-color: #555;
+        }
+
+        #readTextButton, #stopTextButton {
+            display: none; /* مخفيين في البداية */
+        }
+    </style>
+    <script>
+        let utterance;
+
+        function showArticle() {
+            document.getElementById('article').style.display = 'block';
+            document.getElementById('showArticleButton').style.display = 'none';
+            document.getElementById('readTextButton').style.display = 'inline-block'; // يظهر الزر لقراءة المقال
+            document.getElementById('stopTextButton').style.display = 'inline-block'; // يظهر الزر لوقف القراءة
+        }
+
+        function startReading(lang) {
+            let text = '';
+            if (lang === 'no') {
+                text = Array.from(document.querySelectorAll('#article-no')).map(p => p.innerText).join(' ');
+            } else {
+                text = Array.from(document.querySelectorAll('#article-en')).map(p => p.innerText).join(' ');
+            }
+            
+            utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang === 'no' ? 'no-NO' : 'en-US'; // تعيين اللغة
+
+            // اختيار الصوت المناسب إذا كان متاحًا
+            const voices = speechSynthesis.getVoices();
+            const selectedVoice = voices.find(voice => voice.lang === utterance.lang);
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+
+            speechSynthesis.speak(utterance);
+        }
+
+        function stopReading() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel(); // إيقاف القراءة
+            }
+        }
+    </script>
+</head>
+<body>
+    <button id="showArticleButton" onclick="showArticle()">Vis artikkel</button>
+    <button id="readTextButton" onclick="startReading('en')">Les artikkel høyt på engelsk</button>
+    <button id="stopTextButton" onclick="stopReading()">Stopp lesing</button>
+
+    <div id="article" class="container">
+        <img class="gro-rui-img" src="https://media.licdn.com/dms/image/C4D03AQF9P2exE4827Q/profile-displayphoto-shrink_200_200/0/1554674631500?e=2147483647&v=beta&t=YH6gfBtLSTAIMCZQ8qQQi8AqnoFPBYXt9f_VqaFiyfM" alt="Gro Rui">
+        <h1>Gro Rui og Leanders Eventyrbryllup</h1>
+        <p id="article-no">Gro Rui, den vakre og talentfulle Miss Norge, har funnet sin livspartner i Leander. Deres kjærlighetshistorie er som hentet ut av en romantisk roman, og nylig har de to forseglet sin kjærlighet med et drømmebryllup.</p>
+        <img class="leander-img" src="https://i.ibb.co/9ZwLhD6/LEANDERR-jpg.jpg" alt="Leander">
+        <p id="article-no">Gro, kjent for sin sjarm og sitt engasjement for veldedighet, har alltid vært et forbilde for mange. Hennes ekteskap med Leander, en vellykket forretningsmann, har begeistret mange fans og følgere over hele landet.</p>
+        <p id="article-no">Sammen ser de ut til å være det perfekte paret, og deres fremtid sammen ser lys og lovende ut. Vi ønsker Gro og Leander all lykke i deres nye liv sammen!</p>
+
+        <!-- النص باللغة الإنجليزية -->
+        <p id="article-en" style="display: none;">
+            Gro Rui, the beautiful and talented Miss Norway, has found her life partner in Leander. Their love story is like something out of a romantic novel, and recently they sealed their love with a dream wedding.</p>
+        <p id="article-en" style="display: none;">
+            Gro, known for her charm and dedication to charity, has always been a role model for many. Her marriage to Leander, a successful businessman, has thrilled many fans and followers across the country.</p>
+        <p id="article-en" style="display: none;">
+            Together they seem to be the perfect couple, and their future together looks bright and promising. We wish Gro and Leander all the best in their new life together!
+        </p>
+    </div>
+</body>
+</html>
+
+
+
+<p7>LAGRT AV ALI JR</p7>
